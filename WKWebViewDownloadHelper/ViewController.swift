@@ -20,9 +20,10 @@ class ViewController: UIViewController {
         self.view.addSubview(webView)
         webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         helper = WKWebviewDownloadHelper(webView: webView, mimeTypes: ["ms-excel"], delegate: self)
-        let request = URLRequest(url: URL(string: "https://testurl.it")!)
+        let request = URLRequest(url: URL(string: "https://st.catflow.it")!)
         webView.load(request)
         self.webView = webView
+        self.navigationItem.title = "My Page"
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .close, target: nil, action: nil)
     }
 }
@@ -32,6 +33,7 @@ extension ViewController: WKWebViewDownloadHelperDelegate {
         DispatchQueue.main.async {
             let activityVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
             activityVC.popoverPresentationController?.sourceView = self.view
+            activityVC.popoverPresentationController?.sourceRect = self.view.frame
             activityVC.popoverPresentationController?.barButtonItem = self.navigationItem.rightBarButtonItem
             self.present(activityVC, animated: true, completion: nil)
         }
