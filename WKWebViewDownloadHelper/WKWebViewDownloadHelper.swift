@@ -47,7 +47,7 @@ class WKWebviewDownloadHelper:NSObject {
         }
     }
     
-    private func getFileNameFromResponse(_ response:URLResponse) -> String {
+    private func getFileNameFromResponse(_ response:URLResponse) -> String? {
         if let httpResponse = response as? HTTPURLResponse {
             let headers = httpResponse.allHeaderFields
             if let disposition = headers["Content-Disposition"] as? String {
@@ -62,7 +62,7 @@ class WKWebviewDownloadHelper:NSObject {
                 }
             }
         }
-        return "default"
+        return nil
     }
     
     private func isMimeTypeConfigured(_ mimeType:String) -> Bool {
@@ -93,7 +93,7 @@ extension WKWebviewDownloadHelper: WKNavigationDelegate {
         if let mimeType = navigationResponse.response.mimeType {
             if isMimeTypeConfigured(mimeType) {
                 if let url = navigationResponse.response.url {
-                    let fileName = getFileNameFromResponse(navigationResponse.response)
+                    let fileName = getFileNameFromResponse(navigationResponse.response) ?? "default"
                     downloadData(fromURL: url, fileName: fileName) { success, destinationURL in
                         if success, let destinationURL = destinationURL {
                             self.delegate.fileDownloadedAtURL(url: destinationURL)
