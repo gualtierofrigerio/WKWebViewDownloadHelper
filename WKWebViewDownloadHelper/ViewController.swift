@@ -19,8 +19,10 @@ class ViewController: UIViewController {
         let webView = WKWebView(frame: self.view.frame)
         self.view.addSubview(webView)
         webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        helper = WKWebviewDownloadHelper(webView: webView, mimeTypes: ["ms-excel"], delegate: self)
-        let request = URLRequest(url: URL(string: "https://st.catflow.it")!)
+        let mimeTypes = [MimeType(type: "ms-excel", fileExtension: "xls"),
+                         MimeType(type: "pdf", fileExtension: "pdf")]
+        helper = WKWebviewDownloadHelper(webView: webView, mimeTypes:mimeTypes, delegate: self)
+        let request = URLRequest(url: URL(string: "https://www.google.it")!)
         webView.load(request)
         self.webView = webView
         self.navigationItem.title = "My Page"
