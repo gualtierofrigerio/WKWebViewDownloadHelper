@@ -9,6 +9,11 @@
 import Foundation
 import WebKit
 
+struct MimeType {
+    var type:String
+    var fileExtension:String
+}
+
 protocol WKWebViewDownloadHelperDelegate {
     func fileDownloadedAtURL(url:URL)
 }
@@ -16,10 +21,10 @@ protocol WKWebViewDownloadHelperDelegate {
 class WKWebviewDownloadHelper:NSObject {
     
     var webView:WKWebView
-    var mimeTypes:[String]
+    var mimeTypes:[MimeType]
     var delegate:WKWebViewDownloadHelperDelegate
     
-    init(webView:WKWebView, mimeTypes:[String], delegate:WKWebViewDownloadHelperDelegate) {
+    init(webView:WKWebView, mimeTypes:[MimeType], delegate:WKWebViewDownloadHelperDelegate) {
         self.webView = webView
         self.mimeTypes = mimeTypes
         self.delegate = delegate
@@ -47,6 +52,15 @@ class WKWebviewDownloadHelper:NSObject {
         }
     }
     
+    private func getDefaultFileName(forMimeType mimeType:String) -> String {
+        for record in self.mimeTypes {
+            if mimeType.contains(record.type) {
+                return "default." + record.fileExtension
+            }
+        }
+        return "default"
+    }
+    
     private func getFileNameFromResponse(_ response:URLResponse) -> String? {
         if let httpResponse = response as? HTTPURLResponse {
             let headers = httpResponse.allHeaderFields
@@ -66,8 +80,8 @@ class WKWebviewDownloadHelper:NSObject {
     }
     
     private func isMimeTypeConfigured(_ mimeType:String) -> Bool {
-        for type in self.mimeTypes {
-            if mimeType.contains(type) {
+        for record in self.mimeTypes {
+            if mimeType.contains(record.type) {
                 return true
             }
         }
@@ -93,7 +107,10 @@ extension WKWebviewDownloadHelper: WKNavigationDelegate {
         if let mimeType = navigationResponse.response.mimeType {
             if isMimeTypeConfigured(mimeType) {
                 if let url = navigationResponse.response.url {
-                    let fileName = getFileNameFromResponse(navigationResponse.response) ?? "default"
+                    var fileName = getDefaultFileName(forMimeType: mimeType)
+                    if let name = getFileNameFromResponse(navigationResponse.response) {
+                        fileName = name
+                    }
                     downloadData(fromURL: url, fileName: fileName) { success, destinationURL in
                         if success, let destinationURL = destinationURL {
                             self.delegate.fileDownloadedAtURL(url: destinationURL)
