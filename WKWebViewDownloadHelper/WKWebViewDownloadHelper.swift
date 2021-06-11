@@ -107,20 +107,48 @@ extension WKWebviewDownloadHelper: WKNavigationDelegate {
         if let mimeType = navigationResponse.response.mimeType {
             if isMimeTypeConfigured(mimeType) {
                 if let url = navigationResponse.response.url {
-                    var fileName = getDefaultFileName(forMimeType: mimeType)
-                    if let name = getFileNameFromResponse(navigationResponse.response) {
-                        fileName = name
-                    }
-                    downloadData(fromURL: url, fileName: fileName) { success, destinationURL in
-                        if success, let destinationURL = destinationURL {
-                            self.delegate.fileDownloadedAtURL(url: destinationURL)
+                    if #available(iOS 14.5, *) {
+                        decisionHandler(.download)
+                    } else {
+                        var fileName = getDefaultFileName(forMimeType: mimeType)
+                        if let name = getFileNameFromResponse(navigationResponse.response) {
+                            fileName = name
                         }
+                        downloadData(fromURL: url, fileName: fileName) { success, destinationURL in
+                            if success, let destinationURL = destinationURL {
+                                self.delegate.fileDownloadedAtURL(url: destinationURL)
+                            }
+                        }
+                        decisionHandler(.cancel)
                     }
-                    decisionHandler(.cancel)
                     return
                 }
             }
         }
         decisionHandler(.allow)
+    }
+
+    @available(iOS 14.5, *)
+    func webView(_ webView: WKWebView, navigationResponse: WKNavigationResponse, didBecome download: WKDownload) {
+        print(" navigationresponse didbecome download ")
+        download.delegate = self
+    }
+}
+
+@available(iOS 14.5, *)
+extension WKWebviewDownloadHelper: WKDownloadDelegate {
+    func download(_ download: WKDownload, decideDestinationUsing response: URLResponse, suggestedFilename: String, completionHandler: @escaping (URL?) -> Void) {
+        let temporaryDir = NSTemporaryDirectory()
+        let fileName = temporaryDir + "/" + suggestedFilename
+        let url = URL(fileURLWithPath: fileName)
+        completionHandler(url)
+    }
+    
+    func download(_ download: WKDownload, didFailWithError error: Error, resumeData: Data?) {
+        print("download failed \(error)")
+    }
+    
+    func downloadDidFinish(_ download: WKDownload) {
+        print("download finish")
     }
 }
