@@ -8,10 +8,12 @@
 
 import UIKit
 import WebKit
+import WKDownloadHelper
 
 class ViewController: UIViewController {
     var webView:WKWebView!
-    var helper:WKWebviewDownloadHelper!
+    //var helper:WKWebviewDownloadHelper!
+    var downloadHelper: WKDownloadHelper!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,7 +23,8 @@ class ViewController: UIViewController {
         webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         let mimeTypes = [MimeType(type: "ms-excel", fileExtension: "xls"),
                          MimeType(type: "pdf", fileExtension: "pdf")]
-        helper = WKWebviewDownloadHelper(webView: webView, mimeTypes:mimeTypes, delegate: self)
+        //helper = WKWebviewDownloadHelper(webView: webView, mimeTypes:mimeTypes, delegate: self)
+        downloadHelper = WKDownloadHelper(webView: webView, supportedMimeTypes: mimeTypes, delegate: self)
         let request = URLRequest(url: URL(string: "https://www.google.it")!)
         webView.load(request)
         self.webView = webView
@@ -30,10 +33,32 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController: WKWebViewDownloadHelperDelegate {
-    func fileDownloadedAtURL(url: URL) {
+// OLD implementation
+//extension ViewController: WKWebViewDownloadHelperDelegate {
+//    func fileDownloadedAtURL(url: URL) {
+//        DispatchQueue.main.async {
+//            let activityVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+//            activityVC.popoverPresentationController?.sourceView = self.view
+//            activityVC.popoverPresentationController?.sourceRect = self.view.frame
+//            activityVC.popoverPresentationController?.barButtonItem = self.navigationItem.rightBarButtonItem
+//            self.present(activityVC, animated: true, completion: nil)
+//        }
+//    }
+//}
+
+extension ViewController: WKDownloadHelperDelegate {
+    func canNavigate(toUrl: URL) -> Bool {
+        true
+    }
+    
+    func didFailDownloadingFile(error: Error) {
+        print("error while downloading file \(error)")
+    }
+    
+    func didDownloadFile(atUrl: URL) {
+        print("did download file!")
         DispatchQueue.main.async {
-            let activityVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+            let activityVC = UIActivityViewController(activityItems: [atUrl], applicationActivities: nil)
             activityVC.popoverPresentationController?.sourceView = self.view
             activityVC.popoverPresentationController?.sourceRect = self.view.frame
             activityVC.popoverPresentationController?.barButtonItem = self.navigationItem.rightBarButtonItem

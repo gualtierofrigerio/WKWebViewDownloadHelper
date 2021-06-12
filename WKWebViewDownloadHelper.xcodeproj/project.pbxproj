@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,7 +13,7 @@
 		254405F924AFB44C00C32DC8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 254405F724AFB44C00C32DC8 /* Main.storyboard */; };
 		254405FB24AFB44E00C32DC8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 254405FA24AFB44E00C32DC8 /* Assets.xcassets */; };
 		254405FE24AFB44E00C32DC8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 254405FC24AFB44E00C32DC8 /* LaunchScreen.storyboard */; };
-		2544060624AFB47500C32DC8 /* WKWebViewDownloadHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2544060524AFB47500C32DC8 /* WKWebViewDownloadHelper.swift */; };
+		258F07082674DAF6003DC7EF /* WKDownloadHelper in Frameworks */ = {isa = PBXBuildFile; productRef = 258F07072674DAF6003DC7EF /* WKDownloadHelper */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +33,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				258F07082674DAF6003DC7EF /* WKDownloadHelper in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -86,6 +87,9 @@
 			dependencies = (
 			);
 			name = WKWebViewDownloadHelper;
+			packageProductDependencies = (
+				258F07072674DAF6003DC7EF /* WKDownloadHelper */,
+			);
 			productName = WKWebViewDownloadHelper;
 			productReference = 254405EE24AFB44C00C32DC8 /* WKWebViewDownloadHelper.app */;
 			productType = "com.apple.product-type.application";
@@ -114,6 +118,9 @@
 				Base,
 			);
 			mainGroup = 254405E524AFB44C00C32DC8;
+			packageReferences = (
+				258F07062674DAF6003DC7EF /* XCRemoteSwiftPackageReference "WKDownloadHelper" */,
+			);
 			productRefGroup = 254405EF24AFB44C00C32DC8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -144,7 +151,6 @@
 				254405F624AFB44C00C32DC8 /* ViewController.swift in Sources */,
 				254405F224AFB44C00C32DC8 /* AppDelegate.swift in Sources */,
 				254405F424AFB44C00C32DC8 /* SceneDelegate.swift in Sources */,
-				2544060624AFB47500C32DC8 /* WKWebViewDownloadHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -342,6 +348,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		258F07062674DAF6003DC7EF /* XCRemoteSwiftPackageReference "WKDownloadHelper" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/gualtierofrigerio/WKDownloadHelper";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		258F07072674DAF6003DC7EF /* WKDownloadHelper */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 258F07062674DAF6003DC7EF /* XCRemoteSwiftPackageReference "WKDownloadHelper" */;
+			productName = WKDownloadHelper;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 254405E624AFB44C00C32DC8 /* Project object */;
 }

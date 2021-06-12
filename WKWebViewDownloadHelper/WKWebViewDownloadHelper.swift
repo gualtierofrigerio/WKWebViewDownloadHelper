@@ -6,6 +6,9 @@
 //  Copyright © 2020 Gualtiero Frigerio. All rights reserved.
 //
 
+// OLD implementation
+// The helper is now distributed as SPM
+
 import Foundation
 import WebKit
 
@@ -31,6 +34,8 @@ class WKWebviewDownloadHelper:NSObject {
         super.init()
         webView.navigationDelegate = self
     }
+    
+    private var fileDestinationURL: URL?
     
     private func downloadData(fromURL url:URL,
                               fileName:String,
@@ -141,6 +146,7 @@ extension WKWebviewDownloadHelper: WKDownloadDelegate {
         let temporaryDir = NSTemporaryDirectory()
         let fileName = temporaryDir + "/" + suggestedFilename
         let url = URL(fileURLWithPath: fileName)
+        fileDestinationURL = url
         completionHandler(url)
     }
     
@@ -150,5 +156,8 @@ extension WKWebviewDownloadHelper: WKDownloadDelegate {
     
     func downloadDidFinish(_ download: WKDownload) {
         print("download finish")
+        if let url = fileDestinationURL {
+            self.delegate.fileDownloadedAtURL(url: url)
+        }
     }
 }
